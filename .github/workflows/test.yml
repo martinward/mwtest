@@ -21,24 +21,17 @@ jobs:
     name: Request approval via GitHub Issue (${{ inputs.environment }})
     runs-on: ubuntu-latest
     steps:
-      - name: Create approval request (Issue)
-        uses: trstringer/manual-approval@v1
+      - name: Notify via GitHub comment
+        uses: actions/github-script@v7
         with:
-          secret: ${{ github.TOKEN }}
-          approvers: martinward
-          minimum-approvals: 1
-          issue-title: "Approval required: Test Workflow → ${{ inputs.environment }}"
-          issue-body: |
-            Please approve this workflow run.
-
-            Environment: ${{ inputs.environment }}
-            Repository:  ${{ github.repository }}
-            Branch/Ref:  ${{ github.ref }}
-            Commit SHA:  ${{ github.sha }}
-            Triggered by: ${{ github.actor }}
-
-            Approve by commenting: approve / approved / lgtm
-            Deny by commenting: deny / denied / no
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.issue.number; // works on issue/pr events
+            await github.rest.issues.createComment({
+              owner, repo, issue_number,
+              body: `Hi @martinward — please review this run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`
+            });
   approval_gate:
     name: Manual approval (${{ inputs.environment }})
     runs-on: ubuntu-latest
