@@ -45,7 +45,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          message-title: "Replace with an appropriate title"
-          message-text: "Replace with appropriate text"
-          link: "https://example.org"
+          message-title: "Test"
+          message-text: "Test"
+          link: "test"
 
