@@ -15,10 +15,13 @@ on:
           - development
           - staging
           - production
+      JIRA:
+        description: JIRA ref
+        type: string
 
 jobs:
   approval_gate:
-    name: Manual approval (${{ inputs.environment }})
+    name: Manual approval (${{ inputs.environment }} ${{ inputs.JIRA }} )
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
