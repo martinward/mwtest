@@ -26,6 +26,13 @@ jobs:
       - name: Run a one-line script
         run: echo "Testing"
 
+  notify_test_success:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Post to Teams Channel that testing completed successfully and deployment is ready for approval
+        run: echo "Tests passed, please approve"
+
   approval_gate_SA:
     name: Manual Approval
     runs-on: ubuntu-latest
@@ -35,13 +42,13 @@ jobs:
       issues: write
 
     steps:
-      - name: Await Manual Approval
+      - name: Await Manual Approval SA
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.TOKEN }}
           approvers: martinward
           minimum-approvals: 1
-          issue-title: "Manual Approval Required for Deployment to SA"
+          issue-title: "Manual Approval From SA Required for Deployment to SA"
           issue-body: "Please approve or deny the deployment. ${{ inputs.JIRA }}"
 
   approval_gate_Accenture:
@@ -59,15 +66,30 @@ jobs:
           secret: ${{ github.TOKEN }}
           approvers: martinward
           minimum-approvals: 1
-          issue-title: "Manual Approval Required for Deployment to SA"
+          issue-title: "Manual Approval From Accenture Required for Deployment to SA"
           issue-body: "Please approve or deny the deployment. ${{ inputs.JIRA }}"
+
+  notify_approval_done:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Post to Teams Channel that deployment has been approved
+        run: echo "Approval granted, deployment starting"
           
-  build:
+  deploy:
     runs-on: ubuntu-latest
     needs: [approval_gate_SA, approval_gate_Accenture]
     steps:
-      - name: Run a one-line script
-        run: echo "Hello, everyone!"
+      - name: Deployment
+        run: echo "Deploying"
+
+  notify_deployment_success:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Post to Teams Channel that deployment has completed
+        run: echo "Deployment completed"
+  
         
 #  notify_teams:
 #    runs-on: ubuntu-latest
