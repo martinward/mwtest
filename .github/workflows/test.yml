@@ -17,8 +17,8 @@ on:
           - production
 
 jobs:
-  issue_approval:
-    name: Request approval via GitHub Issue (${{ inputs.environment }})
+  notify:
+    name: Notify via GitHub comment (${{ inputs.environment }})
     runs-on: ubuntu-latest
     steps:
       - name: Notify via GitHub comment
@@ -30,7 +30,7 @@ jobs:
             const issue_number = context.issue.number; // works on issue/pr events
             await github.rest.issues.createComment({
               owner, repo, issue_number,
-              body: `Hi @martinward — please review this run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`
+              body: `Hi @martinward — please review this run: ${owner}/${repo}/actions/runs/${context.runId}`
             });
   approval_gate:
     name: Manual approval (${{ inputs.environment }})
