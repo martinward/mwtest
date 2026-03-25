@@ -17,21 +17,6 @@ on:
           - production
 
 jobs:
-  notify:
-    name: Notify via GitHub comment (${{ inputs.environment }})
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify via GitHub comment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const issue_number = context.issue.number; // works on issue/pr events
-            await github.rest.issues.createComment({
-              owner, repo, issue_number,
-              body: `Hi @martinward — please review this run: ${owner}/${repo}/actions/runs/${context.runId}`
-            });
   approval_gate:
     name: Manual approval (${{ inputs.environment }})
     runs-on: ubuntu-latest
