@@ -35,3 +35,17 @@ jobs:
     steps:
       - name: Run a one-line script
         run: echo "Hello, everyone!"
+        
+  notify_teams:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Notify Teams
+        uses: nhs-england-tools/notify-msteams-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          teams-webhook-url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          message-title: "Replace with an appropriate title"
+          message-text: "Replace with appropriate text"
+          link: "https://example.org"
+
