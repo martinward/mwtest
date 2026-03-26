@@ -13,8 +13,8 @@ on:
           - development
           - staging
           - production
-      JIRA:
-        description: JIRA ref
+      confluence_link:
+        description: Link to Release Confluence Page
         type: string
 
 jobs:
@@ -55,7 +55,7 @@ jobs:
           approvers: martinward
           minimum-approvals: 1
           issue-title: "Manual Approval From SA Required for Deployment to SA"
-          issue-body: "Please approve or deny the deployment. ${{ inputs.JIRA }}"
+          issue-body: "Please approve or deny the deployment. ${{ inputs.confluence_link }}"
 
   approval_gate_Accenture:
     name: Manual Approval
