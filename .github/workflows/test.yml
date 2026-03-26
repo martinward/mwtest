@@ -18,8 +18,15 @@ on:
         type: string
 
 jobs:
+  notify_deploy_start:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post to Teams Channel that deployment is starting
+        run: echo "Deployment starting"
+
   test:
     runs-on: ubuntu-latest
+    needs: notify_deploy_start
     steps:
       - name: Run a one-line script
         run: echo "Testing"
@@ -42,6 +49,7 @@ jobs:
     steps:
       - name: Await Manual Approval SA
         uses: trstringer/manual-approval@v1
+        timeout-minutes: 120
         with:
           secret: ${{ github.TOKEN }}
           approvers: martinward
@@ -67,12 +75,19 @@ jobs:
           issue-title: "Manual Approval From Accenture Required for Deployment to SA"
           issue-body: "Please approve or deny the deployment. ${{ inputs.JIRA }}"
 
+  notify_sa_approval_done:
+    runs-on: ubuntu-latest
+    needs: approval_gate_SA
+    steps:
+      - name: Post to Teams Channel that SA approval is complete
+        run: echo "SA Approval confirmed"
+  
   notify_approval_done:
     runs-on: ubuntu-latest
     needs: [approval_gate_SA, approval_gate_Accenture]
     steps:
-      - name: Post to Teams Channel that deployment has been approved
-        run: echo "Approval granted, deployment starting"
+      - name: Post to Teams Channel that deployment has been fully approved
+        run: echo "All approvals granted, deployment starting"
           
   deploy:
     runs-on: ubuntu-latest
