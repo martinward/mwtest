@@ -73,8 +73,8 @@ jobs:
           approvers: martinward
           minimum-approvals: 1
           issue-title: "Manual Approval From Accenture Required for Deployment to SA"
-          issue-body: "Please approve or deny the deployment. ${{ inputs.JIRA }}"
-
+          issue-body: "Please approve or deny the deployment. ${{ inputs.confluence_link }}"
+          
   notify_sa_approval_done:
     runs-on: ubuntu-latest
     needs: approval_gate_SA
