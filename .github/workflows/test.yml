@@ -101,7 +101,13 @@ jobs:
     needs: deploy
     steps:
       - name: Post to Teams Channel that deployment has completed
-        run: echo "Deployment completed"
+        uses: nhs-england-tools/notify-msteams-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          teams-webhook-url: "https://nhs.webhook.office.com/webhookb2/6e9b48a7-9cda-4963-9a63-887bad4c645d@37c354b2-85b0-47f5-b222-07b48d774ee3/IncomingWebhook/10d1b30219004afc875a8cafbfa40f9c/ab3db28b-5536-4d01-9f5d-f6a391da83e5/V2D4z4HHQAz1ZH039q7xLiHr9tOKP0jAZibHSXRkd51fM1"
+          message-title: "Deployment Complete"
+          message-text: "${{ inputs.confluence_link }}"
+          link: "https://github.com/martinward/mwtest/actions/runs/${{ github.run_id }}"
   
         
 #  notify_teams:
